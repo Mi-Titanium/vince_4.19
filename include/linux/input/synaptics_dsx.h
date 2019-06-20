@@ -36,7 +36,7 @@
 #ifndef _SYNAPTICS_DSX_H_
 #define _SYNAPTICS_DSX_H_
 
-#define PLATFORM_DRIVER_NAME "synaptics_dsx_v21"
+#define PLATFORM_DRIVER_NAME "synaptics_dsx"
 #define STYLUS_DRIVER_NAME "synaptics_dsx_stylus"
 #define ACTIVE_PEN_DRIVER_NAME "synaptics_dsx_active_pen"
 #define PROXIMITY_DRIVER_NAME "synaptics_dsx_proximity"
