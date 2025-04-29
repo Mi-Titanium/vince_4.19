@@ -4656,8 +4656,8 @@ err_drm_reg:
 	kfree(rmi4_data);
 
 	return retval;
-}
 #endif
+}
 
 static void synaptics_rmi4_defer_probe(struct work_struct *work)
 {
@@ -4890,8 +4890,8 @@ err_drm_init_wait:
 	cancel_work_sync(&rmi4_data->rmi4_probe_work);
 	destroy_workqueue(rmi4_data->rmi4_probe_wq);
 	kfree(rmi4_data);
-}
 #endif
+}
 
 static int synaptics_rmi4_remove(struct platform_device *pdev)
 {
