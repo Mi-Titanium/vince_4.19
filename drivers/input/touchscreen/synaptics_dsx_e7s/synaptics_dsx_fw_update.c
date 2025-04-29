@@ -5782,7 +5782,7 @@ static ssize_t fwu_sysfs_write_lockdown_code_store (struct device *dev,
 
 	for (i = 0; i < lockdown_data_size; i++) {
 		memcpy (temp, (buf + 2 * i), sizeof (temp));
-		if (kstrtoint(temp, 16, &ld_val) == 1
+		if (kstrtoint(temp, 16, &ld_val) == 1)
 			 *(lockdown_data + i) = ld_val & 0xff;
 	}
 
