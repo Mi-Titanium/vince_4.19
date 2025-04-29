@@ -2377,8 +2377,8 @@ static int synaptics_rmi4_f12_init (struct synaptics_rmi4_data *rmi4_data,
 	unsigned char subpacket;
 	unsigned char ctrl_23_size;
 	unsigned char size_of_2d_data;
-	unsigned char size_of_query5;
-	unsigned char size_of_query8;
+	unsigned char *size_of_query5 = NULL;
+ 	unsigned char *size_of_query8 = NULL;
 	unsigned char ctrl_8_offset;
 	unsigned char ctrl_20_offset;
 	unsigned char ctrl_23_offset;
@@ -2407,6 +2407,18 @@ static int synaptics_rmi4_f12_init (struct synaptics_rmi4_data *rmi4_data,
 	}
 	extra_data = (struct synaptics_rmi4_f12_extra_data *)fhandler->extra;
 	size_of_2d_data = sizeof (struct synaptics_rmi4_f12_finger_data);
+
+	size_of_query5 = kcalloc(1, sizeof(char), GFP_KERNEL);
+ 	if (!size_of_query5) {
+ 		retval = -ENOMEM;
+ 		goto exit;
+ 	}
+ 
+ 	size_of_query8 = kcalloc(1, sizeof(char), GFP_KERNEL);
+ 	if (!size_of_query8) {
+ 		retval = -ENOMEM;
+ 		goto exit;
+ 	}
 
 	query_5 = kzalloc (sizeof (*query_5), GFP_KERNEL);
 	if (!query_5) {
@@ -2464,19 +2476,19 @@ static int synaptics_rmi4_f12_init (struct synaptics_rmi4_data *rmi4_data,
 
 	retval = synaptics_rmi4_reg_read (rmi4_data,
 			fhandler->full_addr.query_base + 4,
-			&size_of_query5,
-			sizeof (size_of_query5));
+			size_of_query5,
+ 			sizeof(*size_of_query5));
 	if (retval < 0)
 		goto exit;
 
-	if (size_of_query5 > sizeof (query_5->data))
-		size_of_query5 = sizeof (query_5->data);
+	if (*size_of_query5 > sizeof(query_5->data))
+		*size_of_query5 = sizeof(query_5->data);
 	memset (query_5->data, 0x00, sizeof (query_5->data));
 
 	retval = synaptics_rmi4_reg_read (rmi4_data,
 			fhandler->full_addr.query_base + 5,
 			query_5->data,
-			size_of_query5);
+			*size_of_query5);
 	if (retval < 0)
 		goto exit;
 
@@ -2580,26 +2592,26 @@ static int synaptics_rmi4_f12_init (struct synaptics_rmi4_data *rmi4_data,
 
 	retval = synaptics_rmi4_reg_read (rmi4_data,
 			fhandler->full_addr.query_base + 7,
-			&size_of_query8,
-			sizeof (size_of_query8));
+			size_of_query8,
+ 			sizeof(*size_of_query8));
 	if (retval < 0)
 		goto exit;
 
-	if (size_of_query8 > sizeof (query_8->data))
-		size_of_query8 = sizeof (query_8->data);
+	if (*size_of_query8 > sizeof(query_8->data))
+		*size_of_query8 = sizeof(query_8->data);
 	memset (query_8->data, 0x00, sizeof (query_8->data));
 
 	retval = synaptics_rmi4_reg_read (rmi4_data,
 			fhandler->full_addr.query_base + 8,
 			query_8->data,
-			size_of_query8);
+			*size_of_query8);
 	if (retval < 0)
 		goto exit;
 
 	/* Determine the presence of the Data0 register */
 	extra_data->data1_offset = query_8->data0_is_present;
 
-	if ((size_of_query8 >= 3) && (query_8->data15_is_present)) {
+	if ((*size_of_query8 >= 3) && (query_8->data15_is_present)) {
 		extra_data->data15_offset = query_8->data0_is_present +
 				query_8->data1_is_present +
 				query_8->data2_is_present +
@@ -2621,7 +2633,7 @@ static int synaptics_rmi4_f12_init (struct synaptics_rmi4_data *rmi4_data,
 	}
 
 #ifdef REPORT_2D_PRESSURE
-	if ((size_of_query8 >= 5) && (query_8->data29_is_present)) {
+	if ((*size_of_query8 >= 5) && (query_8->data29_is_present)) {
 		extra_data->data29_offset = query_8->data0_is_present +
 				query_8->data1_is_present +
 				query_8->data2_is_present +
@@ -2769,6 +2781,8 @@ static int synaptics_rmi4_f12_init (struct synaptics_rmi4_data *rmi4_data,
 	}
 
 exit:
+	kfree(size_of_query5);
+	kfree(size_of_query8);
 	kfree (query_5);
 	kfree (query_8);
 	kfree (ctrl_8);
@@ -2931,8 +2945,6 @@ static void synaptics_rmi4_f1a_kfree (struct synaptics_rmi4_fn *fhandler)
 		kfree (f1a);
 		fhandler->data = NULL;
 	}
-
-	return;
 }
 
 static int synaptics_rmi4_f1a_init (struct synaptics_rmi4_data *rmi4_data,
@@ -2989,8 +3001,6 @@ static void synaptics_rmi4_empty_fn_list (struct synaptics_rmi4_data *rmi4_data)
 		}
 	}
 	INIT_LIST_HEAD (&rmi->support_fn_list);
-
-	return;
 }
 
 static int synaptics_rmi4_check_status (struct synaptics_rmi4_data *rmi4_data,
@@ -2998,16 +3008,15 @@ static int synaptics_rmi4_check_status (struct synaptics_rmi4_data *rmi4_data,
 {
 	int retval;
 	int timeout = CHECK_STATUS_TIMEOUT_MS;
-	struct synaptics_rmi4_f01_device_status status;
 
 	retval = synaptics_rmi4_reg_read (rmi4_data,
 			rmi4_data->f01_data_base_addr,
-			status.data,
-			sizeof (status.data));
+			rmi4_data->status.data,
+ 			sizeof(rmi4_data->status.data));
 	if (retval < 0)
 		return retval;
 
-	while (status.status_code == STATUS_CRC_IN_PROGRESS) {
+	while (rmi4_data->status.status_code == STATUS_CRC_IN_PROGRESS) {
 		if (timeout > 0)
 			msleep (20);
 		else
@@ -3015,8 +3024,8 @@ static int synaptics_rmi4_check_status (struct synaptics_rmi4_data *rmi4_data,
 
 		retval = synaptics_rmi4_reg_read (rmi4_data,
 				rmi4_data->f01_data_base_addr,
-				status.data,
-				sizeof (status.data));
+				rmi4_data->status.data,
+ 				sizeof(rmi4_data->status.data));
 		if (retval < 0)
 			return retval;
 
@@ -3026,11 +3035,11 @@ static int synaptics_rmi4_check_status (struct synaptics_rmi4_data *rmi4_data,
 	if (timeout != CHECK_STATUS_TIMEOUT_MS)
 		*was_in_bl_mode = true;
 
-	if (status.flash_prog == 1) {
+	if (rmi4_data->status.flash_prog == 1) {
 		rmi4_data->flash_prog_mode = true;
 		pr_notice ("%s: In flash prog mode, status = 0x%02x\n",
 				__func__,
-				status.status_code);
+				rmi4_data->status.status_code);
 	} else {
 		rmi4_data->flash_prog_mode = false;
 	}
@@ -3038,36 +3047,44 @@ static int synaptics_rmi4_check_status (struct synaptics_rmi4_data *rmi4_data,
 	return 0;
 }
 
-static void synaptics_rmi4_set_configured (struct synaptics_rmi4_data *rmi4_data)
+static int synaptics_rmi4_set_configured (struct synaptics_rmi4_data *rmi4_data)
 {
 	int retval;
-	unsigned char device_ctrl;
+	unsigned char *device_ctrl = NULL;
+ 
+ 	device_ctrl = kcalloc(1, sizeof(char), GFP_KERNEL);
+ 	if (!device_ctrl) {
+ 		retval = -ENOMEM;
+ 		goto exit;
+ 	}
 
 	retval = synaptics_rmi4_reg_read (rmi4_data,
 			rmi4_data->f01_ctrl_base_addr,
-			&device_ctrl,
-			sizeof (device_ctrl));
+			device_ctrl,
+ 			sizeof(*device_ctrl));
 	if (retval < 0) {
 		dev_err (rmi4_data->pdev->dev.parent,
 				"%s: Failed to set configured\n",
 				__func__);
-		return;
+		goto exit;
 	}
 
-	rmi4_data->no_sleep_setting = device_ctrl & NO_SLEEP_ON;
-	device_ctrl |= CONFIGURED;
+	rmi4_data->no_sleep_setting = *device_ctrl & NO_SLEEP_ON;
+ 	*device_ctrl |= CONFIGURED;
 
 	retval = synaptics_rmi4_reg_write (rmi4_data,
 			rmi4_data->f01_ctrl_base_addr,
-			&device_ctrl,
-			sizeof (device_ctrl));
+			device_ctrl,
+ 			sizeof(*device_ctrl));
 	if (retval < 0) {
 		dev_err (rmi4_data->pdev->dev.parent,
 				"%s: Failed to set configured\n",
 				__func__);
 	}
 
-	return;
+exit:
+	kfree(device_ctrl);
+	return retval;
 }
 
 static int synaptics_rmi4_alloc_fh (struct synaptics_rmi4_fn **fhandler,
@@ -3103,7 +3120,6 @@ static int synaptics_rmi4_query_device (struct synaptics_rmi4_data *rmi4_data)
 	bool f01found;
 	bool f35found;
 	bool was_in_bl_mode;
-	struct synaptics_rmi4_fn_desc rmi_fd;
 	struct synaptics_rmi4_fn *fhandler;
 	struct synaptics_rmi4_device_info *rmi;
 
@@ -3124,8 +3140,8 @@ rescan_pdt:
 
 			retval = synaptics_rmi4_reg_read (rmi4_data,
 					pdt_entry_addr,
-					 (unsigned char *)&rmi_fd,
-					sizeof (rmi_fd));
+					(unsigned char *)&rmi4_data->rmi_fd,
+ 					sizeof(rmi4_data->rmi_fd));
 			if (retval < 0)
 				return retval;
 
@@ -3133,7 +3149,7 @@ rescan_pdt:
 
 			fhandler = NULL;
 
-			if (rmi_fd.fn_number == 0) {
+			if (rmi4_data->rmi_fd.fn_number == 0) {
 				dev_dbg (rmi4_data->pdev->dev.parent,
 						"%s: Reached end of PDT\n",
 						__func__);
@@ -3142,28 +3158,30 @@ rescan_pdt:
 
 			dev_dbg (rmi4_data->pdev->dev.parent,
 					"%s: F%02x found (page %d)\n",
-					__func__, rmi_fd.fn_number,
+					__func__, rmi4_data->rmi_fd.fn_number,
 					page_number);
 
-			switch (rmi_fd.fn_number) {
+			switch (rmi4_data->rmi_fd.fn_number) {
 			case SYNAPTICS_RMI4_F01:
-				if (rmi_fd.intr_src_count == 0)
+				if (rmi4_data->rmi_fd.intr_src_count == 0)
 					break;
 
 				f01found = true;
 
 				retval = synaptics_rmi4_alloc_fh (&fhandler,
-						&rmi_fd, page_number);
+						&rmi4_data->rmi_fd,
+						page_number);
 				if (retval < 0) {
 					dev_err (rmi4_data->pdev->dev.parent,
 							"%s: Failed to alloc for F%d\n",
-							__func__,
-							rmi_fd.fn_number);
+ 							__func__,
+ 							rmi4_data->rmi_fd.fn_number);
 					return retval;
 				}
 
 				retval = synaptics_rmi4_f01_init (rmi4_data,
-						fhandler, &rmi_fd, intr_count);
+						fhandler, &rmi4_data->rmi_fd,
+						intr_count);
 				if (retval < 0)
 					return retval;
 
@@ -3187,59 +3205,65 @@ rescan_pdt:
 
 				break;
 			case SYNAPTICS_RMI4_F11:
-				if (rmi_fd.intr_src_count == 0)
+				if (rmi4_data->rmi_fd.intr_src_count == 0)
 					break;
 
 				retval = synaptics_rmi4_alloc_fh (&fhandler,
-						&rmi_fd, page_number);
+						&rmi4_data->rmi_fd,
+						page_number);
 				if (retval < 0) {
 					dev_err (rmi4_data->pdev->dev.parent,
 							"%s: Failed to alloc for F%d\n",
-							__func__,
-							rmi_fd.fn_number);
+ 							__func__,
+ 							rmi4_data->rmi_fd.fn_number);
 					return retval;
 				}
 
 				retval = synaptics_rmi4_f11_init (rmi4_data,
-						fhandler, &rmi_fd, intr_count);
+						fhandler, &rmi4_data->rmi_fd,
+						intr_count);
 				if (retval < 0)
 					return retval;
 				break;
 			case SYNAPTICS_RMI4_F12:
-				if (rmi_fd.intr_src_count == 0)
+				if (rmi4_data->rmi_fd.intr_src_count == 0)
 					break;
 
 				retval = synaptics_rmi4_alloc_fh (&fhandler,
-						&rmi_fd, page_number);
+						&rmi4_data->rmi_fd,
+						page_number);
 				if (retval < 0) {
 					dev_err (rmi4_data->pdev->dev.parent,
 							"%s: Failed to alloc for F%d\n",
-							__func__,
-							rmi_fd.fn_number);
+ 							__func__,
+ 							rmi4_data->rmi_fd.fn_number);
 					return retval;
 				}
 
 				retval = synaptics_rmi4_f12_init (rmi4_data,
-						fhandler, &rmi_fd, intr_count);
+						fhandler, &rmi4_data->rmi_fd,
+						intr_count);
 				if (retval < 0)
 					return retval;
 				break;
 			case SYNAPTICS_RMI4_F1A:
-				if (rmi_fd.intr_src_count == 0)
+				if (rmi4_data->rmi_fd.intr_src_count == 0)
 					break;
 
 				retval = synaptics_rmi4_alloc_fh (&fhandler,
-						&rmi_fd, page_number);
+						&rmi4_data->rmi_fd,
+						page_number);
 				if (retval < 0) {
 					dev_err (rmi4_data->pdev->dev.parent,
 							"%s: Failed to alloc for F%d\n",
-							__func__,
-							rmi_fd.fn_number);
+ 							__func__,
+ 							rmi4_data->rmi_fd.fn_number);
 					return retval;
 				}
 
 				retval = synaptics_rmi4_f1a_init (rmi4_data,
-						fhandler, &rmi_fd, intr_count);
+						fhandler, &rmi4_data->rmi_fd,
+						intr_count);
 				if (retval < 0) {
 #ifdef IGNORE_FN_INIT_FAILURE
 					kfree (fhandler);
@@ -3251,25 +3275,27 @@ rescan_pdt:
 				break;
 #ifdef USE_DATA_SERVER
 			case SYNAPTICS_RMI4_F21:
-				if (rmi_fd.intr_src_count == 0)
+				if (rmi4_data->rmi_fd.intr_src_count == 0)
 					break;
 
 				retval = synaptics_rmi4_alloc_fh (&fhandler,
-						&rmi_fd, page_number);
+						&rmi4_data->rmi_fd,
+						page_number);
 				if (retval < 0) {
 					dev_err (rmi4_data->pdev->dev.parent,
 							"%s: Failed to alloc for F%d\n",
-							__func__,
-							rmi_fd.fn_number);
+ 							__func__,
+ 							rmi4_data->rmi_fd.fn_number);
 					return retval;
 				}
 
-				fhandler->fn_number = rmi_fd.fn_number;
+				fhandler->fn_number =
+ 					rmi4_data->rmi_fd.fn_number;
 				fhandler->num_of_data_sources =
-						rmi_fd.intr_src_count;
+					rmi4_data->rmi_fd.intr_src_count;
 
-				synaptics_rmi4_set_intr_mask (fhandler, &rmi_fd,
-						intr_count);
+				synaptics_rmi4_set_intr_mask(fhandler,
+					&rmi4_data->rmi_fd, intr_count);
 				break;
 #endif
 			case SYNAPTICS_RMI4_F35:
@@ -3278,16 +3304,16 @@ rescan_pdt:
 #ifdef F51_DISCRETE_FORCE
 			case SYNAPTICS_RMI4_F51:
 				rmi4_data->f51_query_base_addr =
-						rmi_fd.query_base_addr |
-						 (page_number << 8);
+							rmi4_data->rmi_fd.query_base_addr |
+							(page_number << 8);
 				break;
 #endif
 			}
 
 			/* Accumulate the interrupt count */
-			intr_count += rmi_fd.intr_src_count;
+			intr_count += rmi4_data->rmi_fd.intr_src_count;
 
-			if (fhandler && rmi_fd.intr_src_count) {
+			if (fhandler && rmi4_data->rmi_fd.intr_src_count) {
 				list_add_tail (&fhandler->link,
 						&rmi->support_fn_list);
 			}
@@ -3402,7 +3428,7 @@ static int synaptics_rmi4_gpio_setup (int gpio, bool config, int dir, int state)
 	unsigned char buf[16];
 
 	if (config) {
-		snprintf (buf, PAGE_SIZE, "dsx_gpio_%u\n", gpio);
+		snprintf(buf, sizeof(buf), "dsx_gpio_%u\n", gpio);
 
 		retval = gpio_request (gpio, buf);
 		if (retval) {
@@ -3515,8 +3541,6 @@ static void synaptics_rmi4_set_params (struct synaptics_rmi4_data *rmi4_data)
 		set_bit (KEY_WAKEUP, rmi4_data->input_dev->keybit);
 		input_set_capability (rmi4_data->input_dev, EV_KEY, KEY_WAKEUP);
 	}
-
-	return;
 }
 
 static int synaptics_rmi4_set_input_dev (struct synaptics_rmi4_data *rmi4_data)
@@ -3960,22 +3984,18 @@ static void synaptics_rmi4_rebuild_work (struct work_struct *work)
 				exp_fhandler->exp_fn->init (rmi4_data);
 	}
 
-	retval = 0;
-
 exit:
 	synaptics_rmi4_irq_enable (rmi4_data, true, false);
 
 	mutex_unlock (&exp_data.mutex);
 
 	mutex_unlock (&(rmi4_data->rmi4_reset_mutex));
-
-	return;
 }
 
 static int synaptics_rmi4_reset_device (struct synaptics_rmi4_data *rmi4_data,
 		bool rebuild)
 {
-	int retval;
+	int retval = 0;
 	struct synaptics_rmi4_exp_fhandler *exp_fhandler;
 
 	mutex_lock (&(rmi4_data->rmi4_reset_mutex));
@@ -4044,7 +4064,7 @@ static void synaptics_rmi4_reset_work (struct work_struct *work)
 			dev_err (rmi4_data->pdev->dev.parent,
 					"%s: Timed out waiting for FB ready\n",
 					__func__);
-			return;
+			goto err;
 		}
 	}
 
@@ -4058,49 +4078,61 @@ static void synaptics_rmi4_reset_work (struct work_struct *work)
 	}
 
 	mutex_unlock (&rmi4_data->rmi4_exp_init_mutex);
+err:
+ 
+	dev_err(rmi4_data->pdev->dev.parent,
+		"%s: Timed out waiting for FB ready\n",
+		__func__);
 
-	return;
 }
 #endif
 
-static void synaptics_rmi4_sleep_enable (struct synaptics_rmi4_data *rmi4_data,
+static int synaptics_rmi4_sleep_enable (struct synaptics_rmi4_data *rmi4_data,
 		bool enable)
 {
 	int retval;
-	unsigned char device_ctrl;
+	unsigned char *device_ctrl = NULL;
 	unsigned char no_sleep_setting = rmi4_data->no_sleep_setting;
+
+	device_ctrl = kcalloc(1, sizeof(char), GFP_KERNEL);
+ 	if (!device_ctrl) {
+ 		retval = -ENOMEM;
+ 		goto exit;
+ 	}
 
 	retval = synaptics_rmi4_reg_read (rmi4_data,
 			rmi4_data->f01_ctrl_base_addr,
-			&device_ctrl,
-			sizeof (device_ctrl));
+			device_ctrl,
+ 			sizeof(*device_ctrl));
 	if (retval < 0) {
 		dev_err (rmi4_data->pdev->dev.parent,
 				"%s: Failed to read device control\n",
 				__func__);
-		return;
+		goto exit;
 	}
 
-	device_ctrl = device_ctrl & ~MASK_3BIT;
+	*device_ctrl = *device_ctrl & ~MASK_3BIT;
 	if (enable)
-		device_ctrl = device_ctrl | SENSOR_SLEEP;
+		*device_ctrl = *device_ctrl | SENSOR_SLEEP;
 	else
-		device_ctrl = device_ctrl | no_sleep_setting | NORMAL_OPERATION;
+		*device_ctrl = *device_ctrl | no_sleep_setting | NORMAL_OPERATION;
 
 	retval = synaptics_rmi4_reg_write (rmi4_data,
 			rmi4_data->f01_ctrl_base_addr,
-			&device_ctrl,
-			sizeof (device_ctrl));
+			device_ctrl,
+ 			sizeof(*device_ctrl));
 	if (retval < 0) {
 		dev_err (rmi4_data->pdev->dev.parent,
 				"%s: Failed to write device control\n",
 				__func__);
-		return;
+		goto exit;
 	}
 
 	rmi4_data->sensor_sleep = enable;
 
-	return;
+exit:
+	kfree(device_ctrl);
+	return retval;
 }
 
 static void synaptics_rmi4_exp_fn_work (struct work_struct *work)
@@ -4132,8 +4164,6 @@ static void synaptics_rmi4_exp_fn_work (struct work_struct *work)
 	mutex_unlock (&exp_data.mutex);
 	mutex_unlock (&rmi4_data->rmi4_reset_mutex);
 	mutex_unlock (&rmi4_data->rmi4_exp_init_mutex);
-
-	return;
 }
 
 void synaptics_rmi4_new_function (struct synaptics_rmi4_exp_fn *exp_fn,
@@ -4177,8 +4207,6 @@ exit:
 				&exp_data.work,
 				msecs_to_jiffies (EXP_FN_WORK_DELAY_MS));
 	}
-
-	return;
 }
 EXPORT_SYMBOL (synaptics_rmi4_new_function);
 
@@ -4621,7 +4649,7 @@ static int synaptics_rmi4_fb_notifier_cb (struct notifier_block *self,
 #endif
 
 #ifdef USE_EARLYSUSPEND
-static void synaptics_rmi4_early_suspend (struct early_suspend *h)
+static int synaptics_rmi4_early_suspend (struct early_suspend *h)
 {
 	struct synaptics_rmi4_exp_fhandler *exp_fhandler;
 	struct synaptics_rmi4_data *rmi4_data =
@@ -4630,7 +4658,7 @@ static void synaptics_rmi4_early_suspend (struct early_suspend *h)
 	unsigned char device_ctrl;
 
 	if (rmi4_data->stay_awake)
-		return;
+		return retval;
 
 
 	if (rmi4_data->enable_wakeup_gesture) {
@@ -4680,10 +4708,10 @@ exit:
 
 	rmi4_data->suspend = true;
 
-	return;
+	return retval;
 }
 
-static void synaptics_rmi4_late_resume (struct early_suspend *h)
+static int synaptics_rmi4_late_resume (struct early_suspend *h)
 {
 #ifdef FB_READY_RESET
 	int retval;
@@ -4694,7 +4722,7 @@ static void synaptics_rmi4_late_resume (struct early_suspend *h)
 			early_suspend);
 
 	if (rmi4_data->stay_awake)
-		return;
+		return retval;
 
 	if (rmi4_data->enable_wakeup_gesture) {
 		disable_irq_wake (rmi4_data->irq);
@@ -4729,7 +4757,7 @@ exit:
 
 	rmi4_data->suspend = false;
 
-	return;
+	return retval;
 }
 #endif
 
@@ -4893,11 +4921,9 @@ static void __exit synaptics_rmi4_exit (void)
 	platform_driver_unregister (&synaptics_rmi4_driver);
 
 	synaptics_rmi4_bus_exit ();
-
-	return;
 }
 
-module_init (synaptics_rmi4_init);
+late_initcall(synaptics_rmi4_init);
 module_exit (synaptics_rmi4_exit);
 
 MODULE_AUTHOR ("Synaptics, Inc.");
