@@ -276,46 +276,6 @@ static short tddi_full_raw_limit_upper[TX_NUM_DEFAULT * RX_NUM_DEFAULT] = {3508,
 3395, 3300, 3324, 3314, 3276, 3397, 3327, 3353, 3431, 3343, 3348, 3430, 3459, 3301, 3445, 3455, 3440, 3483, 3388, 3335, 3440, 3437, 3352, 3414, 3389, 3368, 3427, 3331, 3354, 3468, 3362, 3399
 };
 
-static short tddi_full_raw_limit_lower_shenchao[TX_NUM_DEFAULT * RX_NUM_DEFAULT] = {1779, 1717, 1680, 1665, 1701, 1674, 1664, 1695, 1668, 1667, 1697, 1668, 1656, 1659, 1619, 1616, 1622, 1602, 1574, 1624, 1596, 1571, 1597, 1570, 1600, 1604, 1594, 1571, 1611, 1569, 1568, 1680,
-1534, 1527, 1503, 1491, 1527, 1500, 1494, 1525, 1499, 1500, 1550, 1501, 1500, 1514, 1495, 1504, 1510, 1495, 1468, 1526, 1492, 1471, 1495, 1472, 1499, 1508, 1495, 1477, 1519, 1472, 1471, 1582,
-1500, 1512, 1495, 1486, 1526, 1493, 1489, 1517, 1497, 1499, 1541, 1503, 1497, 1519, 1500, 1511, 1519, 1503, 1478, 1538, 1503, 1482, 1510, 1484, 1514, 1525, 1510, 1494, 1535, 1486, 1483, 1598,
-1489, 1502, 1487, 1480, 1521, 1488, 1487, 1515, 1494, 1498, 1537, 1500, 1496, 1523, 1501, 1513, 1529, 1508, 1485, 1545, 1508, 1490, 1522, 1490, 1522, 1531, 1514, 1502, 1547, 1488, 1500, 1611,
-1492, 1504, 1479, 1481, 1515, 1483, 1487, 1511, 1490, 1501, 1532, 1497, 1497, 1519, 1498, 1515, 1539, 1513, 1496, 1553, 1515, 1502, 1530, 1498, 1534, 1545, 1523, 1514, 1558, 1498, 1509, 1627,
-1489, 1495, 1472, 1474, 1509, 1478, 1482, 1511, 1486, 1496, 1535, 1493, 1494, 1516, 1494, 1511, 1535, 1509, 1494, 1551, 1513, 1502, 1531, 1498, 1534, 1546, 1521, 1513, 1556, 1494, 1506, 1626,
-1489, 1492, 1468, 1470, 1505, 1474, 1478, 1507, 1483, 1492, 1530, 1489, 1490, 1510, 1490, 1507, 1531, 1506, 1491, 1548, 1510, 1500, 1528, 1498, 1536, 1549, 1526, 1520, 1563, 1500, 1515, 1636,
-1488, 1488, 1465, 1466, 1501, 1471, 1476, 1504, 1480, 1491, 1528, 1488, 1488, 1507, 1488, 1505, 1529, 1505, 1490, 1545, 1508, 1498, 1528, 1496, 1533, 1544, 1522, 1519, 1574, 1502, 1506, 1607,
-1477, 1458, 1466, 1452, 1496, 1472, 1471, 1504, 1483, 1488, 1526, 1493, 1487, 1515, 1502, 1516, 1544, 1526, 1507, 1568, 1533, 1518, 1550, 1523, 1554, 1568, 1552, 1536, 1584, 1535, 1534, 1665,
-1528, 1486, 1542, 1502, 1519, 1542, 1507, 1508, 1564, 1509, 1522, 1544, 1509, 1508, 1555, 1510, 1527, 1547, 1510, 1533, 1549, 1516, 1510, 1551, 1540, 1519, 1564, 1523, 1527, 1527, 1509, 1620,
-1485, 1472, 1537, 1474, 1510, 1525, 1480, 1489, 1543, 1485, 1506, 1521, 1487, 1493, 1539, 1490, 1517, 1535, 1499, 1532, 1543, 1511, 1513, 1552, 1535, 1522, 1565, 1519, 1537, 1554, 1503, 1628,
-1491, 1484, 1533, 1480, 1512, 1528, 1484, 1492, 1546, 1488, 1508, 1525, 1490, 1496, 1543, 1493, 1519, 1537, 1500, 1534, 1546, 1513, 1515, 1555, 1537, 1524, 1567, 1518, 1532, 1548, 1496, 1617,
-1495, 1490, 1542, 1486, 1517, 1535, 1489, 1497, 1552, 1493, 1512, 1531, 1494, 1500, 1547, 1496, 1521, 1541, 1502, 1535, 1548, 1514, 1514, 1550, 1531, 1516, 1557, 1509, 1522, 1536, 1485, 1599,
-1500, 1499, 1550, 1494, 1524, 1543, 1496, 1504, 1559, 1499, 1518, 1536, 1499, 1505, 1553, 1502, 1525, 1545, 1504, 1537, 1546, 1513, 1513, 1540, 1530, 1513, 1552, 1507, 1520, 1534, 1483, 1596,
-1503, 1500, 1557, 1499, 1528, 1547, 1500, 1506, 1561, 1503, 1517, 1540, 1502, 1503, 1552, 1505, 1517, 1538, 1499, 1526, 1539, 1505, 1498, 1532, 1521, 1498, 1538, 1497, 1504, 1517, 1471, 1576,
-1510, 1497, 1557, 1505, 1529, 1550, 1506, 1507, 1561, 1508, 1519, 1542, 1506, 1505, 1551, 1505, 1512, 1529, 1494, 1519, 1532, 1500, 1491, 1524, 1518, 1493, 1534, 1493, 1499, 1514, 1468, 1570,
-1534, 1502, 1560, 1508, 1533, 1553, 1510, 1510, 1563, 1509, 1518, 1539, 1502, 1500, 1544, 1499, 1503, 1520, 1486, 1516, 1531, 1488, 1481, 1514, 1505, 1479, 1519, 1479, 1486, 1497, 1458, 1557,
-1661, 1615, 1668, 1618, 1645, 1663, 1621, 1620, 1672, 1619, 1626, 1645, 1613, 1610, 1653, 1609, 1614, 1650, 1638, 1663, 1672, 1642, 1633, 1666, 1660, 1630, 1670, 1632, 1638, 1653, 1626, 1761
-};
-
-static short tddi_full_raw_limit_upper_shenchao[TX_NUM_DEFAULT * RX_NUM_DEFAULT] = {3696, 3566, 3490, 3458, 3533, 3477, 3456, 3521, 3465, 3463, 3526, 3466, 3440, 3446, 3363, 3358, 3369, 3327, 3270, 3373, 3316, 3263, 3318, 3261, 3323, 3332, 3311, 3263, 3347, 3259, 3258, 3491,
-3187, 3171, 3121, 3098, 3172, 3115, 3103, 3168, 3114, 3115, 3219, 3118, 3115, 3145, 3105, 3125, 3136, 3105, 3049, 3169, 3099, 3055, 3106, 3057, 3113, 3134, 3106, 3067, 3156, 3058, 3055, 3286,
-3116, 3141, 3105, 3086, 3169, 3101, 3094, 3152, 3109, 3114, 3201, 3123, 3109, 3156, 3116, 3139, 3155, 3123, 3071, 3195, 3121, 3079, 3136, 3083, 3144, 3168, 3138, 3104, 3189, 3087, 3082, 3320,
-3094, 3121, 3089, 3074, 3159, 3091, 3088, 3147, 3104, 3112, 3192, 3117, 3108, 3163, 3117, 3144, 3176, 3133, 3084, 3208, 3132, 3094, 3161, 3095, 3162, 3181, 3144, 3119, 3213, 3091, 3115, 3347,
-3099, 3124, 3073, 3075, 3148, 3080, 3090, 3139, 3095, 3117, 3183, 3109, 3111, 3156, 3111, 3146, 3196, 3142, 3107, 3226, 3147, 3119, 3178, 3112, 3187, 3209, 3163, 3146, 3236, 3111, 3134, 3380,
-3093, 3106, 3058, 3061, 3135, 3070, 3080, 3140, 3087, 3108, 3189, 3102, 3104, 3148, 3104, 3139, 3188, 3134, 3103, 3223, 3144, 3120, 3181, 3112, 3186, 3211, 3160, 3144, 3232, 3103, 3129, 3378,
-3093, 3099, 3050, 3053, 3126, 3062, 3071, 3131, 3080, 3100, 3178, 3094, 3096, 3137, 3094, 3131, 3181, 3128, 3097, 3215, 3138, 3115, 3175, 3112, 3190, 3217, 3169, 3158, 3246, 3116, 3146, 3399,
-3091, 3091, 3043, 3044, 3118, 3056, 3067, 3123, 3075, 3096, 3173, 3090, 3091, 3131, 3091, 3125, 3177, 3126, 3096, 3209, 3133, 3111, 3174, 3107, 3185, 3208, 3162, 3155, 3269, 3120, 3129, 3339,
-3069, 3029, 3046, 3016, 3108, 3057, 3056, 3125, 3081, 3091, 3170, 3101, 3089, 3147, 3120, 3148, 3207, 3170, 3131, 3256, 3184, 3153, 3220, 3163, 3229, 3256, 3225, 3190, 3290, 3190, 3187, 3458,
-3175, 3086, 3203, 3121, 3156, 3202, 3130, 3133, 3248, 3134, 3162, 3206, 3135, 3133, 3230, 3136, 3173, 3214, 3138, 3184, 3218, 3149, 3136, 3223, 3198, 3155, 3250, 3165, 3171, 3172, 3134, 3366,
-3086, 3057, 3193, 3063, 3136, 3168, 3075, 3092, 3205, 3085, 3128, 3160, 3089, 3102, 3198, 3095, 3151, 3189, 3113, 3183, 3205, 3139, 3143, 3223, 3188, 3162, 3252, 3156, 3193, 3229, 3122, 3381,
-3097, 3082, 3185, 3074, 3140, 3175, 3083, 3099, 3212, 3091, 3133, 3167, 3095, 3107, 3205, 3101, 3155, 3194, 3115, 3186, 3211, 3144, 3148, 3230, 3193, 3166, 3255, 3154, 3182, 3215, 3107, 3360,
-3106, 3095, 3202, 3086, 3152, 3190, 3093, 3110, 3224, 3102, 3142, 3180, 3103, 3115, 3215, 3108, 3160, 3201, 3119, 3190, 3216, 3146, 3144, 3220, 3181, 3148, 3235, 3134, 3162, 3192, 3084, 3322,
-3117, 3114, 3220, 3104, 3166, 3205, 3107, 3124, 3239, 3115, 3152, 3191, 3113, 3126, 3226, 3119, 3169, 3209, 3124, 3192, 3211, 3144, 3143, 3199, 3177, 3144, 3223, 3131, 3158, 3186, 3080, 3316,
-3122, 3117, 3234, 3114, 3173, 3213, 3117, 3128, 3243, 3123, 3151, 3198, 3121, 3123, 3224, 3126, 3152, 3195, 3113, 3169, 3197, 3125, 3112, 3183, 3159, 3112, 3194, 3109, 3123, 3152, 3056, 3273,
-3137, 3110, 3234, 3125, 3177, 3219, 3128, 3130, 3242, 3132, 3155, 3204, 3129, 3126, 3222, 3126, 3140, 3177, 3104, 3155, 3182, 3116, 3097, 3165, 3153, 3101, 3186, 3101, 3114, 3144, 3050, 3260,
-3187, 3119, 3240, 3133, 3185, 3227, 3136, 3136, 3247, 3134, 3154, 3197, 3121, 3116, 3208, 3114, 3122, 3157, 3086, 3148, 3181, 3091, 3075, 3146, 3127, 3072, 3155, 3073, 3086, 3110, 3030, 3235,
-3451, 3355, 3464, 3360, 3416, 3455, 3367, 3366, 3474, 3363, 3378, 3418, 3350, 3345, 3433, 3343, 3352, 3428, 3402, 3455, 3473, 3410, 3392, 3460, 3449, 3386, 3468, 3390, 3403, 3433, 3377, 3657
-};
-
 #define FULL_RAW_CAP_TEST_LIMIT_LOWER 300
 #define FULL_RAW_CAP_TEST_LIMIT_UPPER 60000
 
@@ -324,9 +284,6 @@ static short tddi_full_raw_limit_upper_shenchao[TX_NUM_DEFAULT * RX_NUM_DEFAULT]
 
 #define EE_SHORT_TEST_LIMIT_PART1  230
 #define EE_SHORT_TEST_LIMIT_PART2  70
-
-#define EE_SHORT_TEST_LIMIT_PART1_SHENCHAO  60
-#define EE_SHORT_TEST_LIMIT_PART2_SHENCHAO  90
 
 #define AMP_OPEN_INT_DUR_ONE 145
 #define AMP_OPEN_INT_DUR_TWO 10
@@ -348,12 +305,6 @@ static short tddi_full_raw_limit_upper_shenchao[TX_NUM_DEFAULT * RX_NUM_DEFAULT]
 #define ELEC_OPEN_TEST_LIMIT_TWO_LOWER 40
 #define ELEC_OPEN_TEST_LIMIT_TWO_UPPER 240
 
-#define ELEC_OPEN_INT_DUR_ONE_SHENCHAO 12
-#define ELEC_OPEN_INT_DUR_TWO_SHENCHAO 50
-#define ELEC_OPEN_TEST_LIMIT_ONE_LOWER_SHENCHAO 382
-#define ELEC_OPEN_TEST_LIMIT_ONE_UPPER_SHENCHAO 2300
-#define ELEC_OPEN_TEST_LIMIT_TWO_LOWER_SHENCHAO 68
-#define ELEC_OPEN_TEST_LIMIT_TWO_UPPER_SHENCHAO 184
 /* tddi f54 test reporting - */
 
 #define _TEST_FAIL 1
@@ -3739,18 +3690,6 @@ static ssize_t test_sysfs_tddi_ee_short_store(struct device *dev,
 			max = max_t(signed short, tddi_rt95_part_one[i*rx_num + j], max);
 #endif
 			if (tp_flag == 1) {	
-				if (tddi_rt95_part_one[i*rx_num + j] > EE_SHORT_TEST_LIMIT_PART1_SHENCHAO) {
-				dev_err(f54->rmi4_data->pdev->dev.parent,
-						"%s:EBBG fail at (tx%-2d, rx%-2d) = %-4d in part 1 image (limit = %d)\n",
-							__func__, i, j, tddi_rt95_part_one[i*rx_num + j], EE_SHORT_TEST_LIMIT_PART1_SHENCHAO);
-
-					tddi_rt95_part_one[i*rx_num + j] = _TEST_FAIL;
-				}
-				else {
-					tddi_rt95_part_one[i*rx_num + j] = _TEST_PASS;
-				}			
-			} 
-			else {
 				if (tddi_rt95_part_one[i*rx_num + j] > EE_SHORT_TEST_LIMIT_PART1) {
 				dev_err(f54->rmi4_data->pdev->dev.parent,
 						"%s:Tianma fail at (tx%-2d, rx%-2d) = %-4d in part 1 image (limit = %d)\n",
@@ -3791,18 +3730,6 @@ static ssize_t test_sysfs_tddi_ee_short_store(struct device *dev,
 			max = max_t(signed short, tddi_rt95_part_two[i*rx_num + j], max);
 #endif
 			if (tp_flag == 1) {
-				if (tddi_rt95_part_two[i*rx_num + j] < EE_SHORT_TEST_LIMIT_PART2_SHENCHAO) {
-				dev_err(f54->rmi4_data->pdev->dev.parent,
-						"%s:EBBG fail at (tx%-2d, rx%-2d) = %-4d in part 2 image (limit = %d)\n",
-							__func__, i, j, tddi_rt95_part_two[i*rx_num + j], EE_SHORT_TEST_LIMIT_PART2_SHENCHAO);
-	
-					tddi_rt95_part_two[i*rx_num + j] = _TEST_FAIL;
-				}
-				else {
-					tddi_rt95_part_two[i*rx_num + j] = _TEST_PASS;
-				}
-			}
-			else {
 				if (tddi_rt95_part_two[i*rx_num + j] < EE_SHORT_TEST_LIMIT_PART2) {
 				dev_err(f54->rmi4_data->pdev->dev.parent,
 						"%s:Tianma fail at (tx%-2d, rx%-2d) = %-4d in part 2 image (limit = %d)\n",
@@ -4240,11 +4167,7 @@ static int test_tddi_full_raw_show(struct device *dev,
 
 			min = (min < *report_data_16)? min : *report_data_16;
 			max = (max > *report_data_16)? max : *report_data_16;
-			if (tp_flag == 1) {
-				if ((*report_data_16 < tddi_full_raw_limit_lower_shenchao[k]) || (*report_data_16 > tddi_full_raw_limit_upper_shenchao[k])) {
-					fail_count ++;
-				}
-			} else {			
+			if (tp_flag == 1) {			
 				if ((*report_data_16 < tddi_full_raw_limit_lower[k]) || (*report_data_16 > tddi_full_raw_limit_upper[k])) {
 					fail_count ++;
 				}
@@ -4861,9 +4784,6 @@ static ssize_t test_sysfs_tddi_amp_electrode_open_store(struct device *dev,
 		goto exit;
 	}
 	if (tp_flag == 1) {
-		control.reg_99->integration_duration_lsb = ELEC_OPEN_INT_DUR_ONE_SHENCHAO;
-		control.reg_99->integration_duration_msb = (ELEC_OPEN_INT_DUR_ONE_SHENCHAO >> 8) & 0xff;
-	} else {
 		control.reg_99->integration_duration_lsb = ELEC_OPEN_INT_DUR_ONE;
 		control.reg_99->integration_duration_msb = (ELEC_OPEN_INT_DUR_ONE >> 8) & 0xff;
 	}
@@ -4929,9 +4849,6 @@ static ssize_t test_sysfs_tddi_amp_electrode_open_store(struct device *dev,
 		goto exit;
 	}
 	if (tp_flag == 1) {
-		control.reg_99->integration_duration_lsb = ELEC_OPEN_INT_DUR_TWO_SHENCHAO;
-		control.reg_99->integration_duration_msb = (ELEC_OPEN_INT_DUR_TWO_SHENCHAO >> 8) & 0xff;
-	} else {
 		control.reg_99->integration_duration_lsb = ELEC_OPEN_INT_DUR_TWO;
 		control.reg_99->integration_duration_msb = (ELEC_OPEN_INT_DUR_TWO >> 8) & 0xff;
 	}
@@ -5048,20 +4965,6 @@ static ssize_t test_sysfs_tddi_amp_electrode_open_store(struct device *dev,
 			max = max_t(signed short, p_rt92_delta_image[i*rx_num + j], max);
 #endif
 			if (tp_flag == 1) {
-				if ((p_rt92_delta_image[i * rx_num + j] < ELEC_OPEN_TEST_LIMIT_ONE_LOWER_SHENCHAO) ||
-					(p_rt92_delta_image[i * rx_num + j] > ELEC_OPEN_TEST_LIMIT_ONE_UPPER_SHENCHAO)){
-					dev_err(f54->rmi4_data->pdev->dev.parent,
-						"%s:EBBG fail at (tx%-2d, rx%-2d) = %-4d at phase 1 (limit: %d - %d)\n",
-	 						__func__, i, j, p_rt92_delta_image[i*rx_num + j], 
-							ELEC_OPEN_TEST_LIMIT_ONE_LOWER_SHENCHAO, ELEC_OPEN_TEST_LIMIT_ONE_UPPER_SHENCHAO);
-
-					p_rt92_image_1[i*rx_num + j] = _TEST_FAIL;
-				}
-				else {
-					p_rt92_image_1[i*rx_num + j] = _TEST_PASS;
-				}				
-			}
-			else {
 				if ((p_rt92_delta_image[i * rx_num + j] < ELEC_OPEN_TEST_LIMIT_ONE_LOWER) ||
 					(p_rt92_delta_image[i * rx_num + j] > ELEC_OPEN_TEST_LIMIT_ONE_UPPER)){
 
@@ -5101,20 +5004,6 @@ static ssize_t test_sysfs_tddi_amp_electrode_open_store(struct device *dev,
 			max = max_t(signed short, p_rt92_delta_image[i*rx_num + j], max);
 #endif
 			if (tp_flag == 1) {
-				if ((p_rt92_delta_image[i * rx_num + j] < ELEC_OPEN_TEST_LIMIT_TWO_LOWER_SHENCHAO) ||
-					(p_rt92_delta_image[i * rx_num + j] > ELEC_OPEN_TEST_LIMIT_TWO_UPPER_SHENCHAO)){
-					dev_err(f54->rmi4_data->pdev->dev.parent,
-						"%s:EBBG fail at (tx%-2d, rx%-2d) = %-4d at phase 2 (limit: %d - %d)\n",
-							__func__, i, j, p_rt92_delta_image[i*rx_num + j], 
-							ELEC_OPEN_TEST_LIMIT_TWO_LOWER_SHENCHAO, ELEC_OPEN_TEST_LIMIT_TWO_UPPER_SHENCHAO);
-
-					p_rt92_image_2[i*rx_num + j] = _TEST_FAIL;
-				}
-				else {
-					p_rt92_image_2[i*rx_num + j] = _TEST_PASS;
-				}				
-			}
-			else {
 				if ((p_rt92_delta_image[i * rx_num + j] < ELEC_OPEN_TEST_LIMIT_TWO_LOWER) ||
 					(p_rt92_delta_image[i * rx_num + j] > ELEC_OPEN_TEST_LIMIT_TWO_UPPER)){
 
