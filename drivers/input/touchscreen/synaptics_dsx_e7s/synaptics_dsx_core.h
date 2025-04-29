@@ -63,26 +63,6 @@
 #define sstrtoul(...) strict_strtoul(__VA_ARGS__)
 #endif
 
-/*
-#define F51_DISCRETE_FORCE
-#ifdef F51_DISCRETE_FORCE
-#define FORCE_LEVEL_ADDR 0x0419
-#define FORCE_LEVEL_MAX 255
-#define CAL_DATA_SIZE 144
-#endif
-#define SYNA_TDDI
-*/
-#define SYNA_TDDI
-#define SYN_DEBUG 1
-#define SYN_I2C_NAME "SYN-ts"
- 
-#if SYN_DEBUG
-#define SYN_LOG(fmt, args...)    pr_err("[%s] %s %d: " fmt, SYN_I2C_NAME, __func__, __LINE__, ##args)
-#else
-#define SYN_LOG(fmt, args...)    pr_info("[%s] %s %d: " fmt, SYN_I2C_NAME, __func__, __LINE__, ##args)
-#endif
-#define SYN_ERR(fmt, args...)    pr_err("[%s] %s %d: " fmt, SYN_I2C_NAME, __func__, __LINE__, ##args)
-
 #define PDT_PROPS (0X00EF)
 #define PDT_START (0x00E9)
 #define PDT_END (0x00D0)
