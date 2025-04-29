@@ -467,6 +467,7 @@ exit:
 
 static int check_dt(struct device_node *np)
 {
+#if defined(CONFIG_DRM)
 	int i;
 	int count;
 	struct device_node *node;
@@ -486,6 +487,7 @@ static int check_dt(struct device_node *np)
 		}
 	}
 
+#endif
 	return -ENODEV;
 }
 

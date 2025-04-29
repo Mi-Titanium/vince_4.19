@@ -138,7 +138,9 @@ static int synaptics_rmi4_reset_device(struct synaptics_rmi4_data *rmi4_data,
 		bool rebuild);
 static int synaptics_rmi4_dsi_panel_notifier_cb(struct notifier_block *self,
 		unsigned long event, void *data);
+#if defined(CONFIG_DRM)
 struct drm_panel *active_panel;
+#endif
 #ifdef CONFIG_HAS_EARLYSUSPEND
 #ifndef CONFIG_FB
 #define USE_EARLYSUSPEND
@@ -4612,6 +4614,7 @@ static int synaptics_rmi4_probe(struct platform_device *pdev)
 	vir_button_map = bdata->vir_button_map;
 
 	rmi4_data->initialized = false;
+#if defined(CONFIG_DRM)
 	rmi4_data->fb_notifier.notifier_call =
 					synaptics_rmi4_dsi_panel_notifier_cb;
 	if (active_panel) {
@@ -4624,11 +4627,13 @@ static int synaptics_rmi4_probe(struct platform_device *pdev)
 			goto err_drm_reg;
 		}
 	}
+#endif
 
 	/* Initialize secure touch */
 	synaptics_rmi4_secure_touch_init(rmi4_data);
 	synaptics_rmi4_secure_touch_stop(rmi4_data, true);
 
+#if defined(CONFIG_DRM)
 	rmi4_data->rmi4_probe_wq = create_singlethread_workqueue(
 						"Synaptics_rmi4_probe_wq");
 	if (!rmi4_data->rmi4_probe_wq) {
@@ -4652,6 +4657,7 @@ err_drm_reg:
 
 	return retval;
 }
+#endif
 
 static void synaptics_rmi4_defer_probe(struct work_struct *work)
 {
@@ -4875,6 +4881,7 @@ err_set_gpio:
 err_enable_reg:
 	synaptics_rmi4_get_reg(rmi4_data, false);
 
+#if defined(CONFIG_DRM)
 err_get_reg:
 err_drm_init_wait:
 	if (active_panel)
@@ -4884,6 +4891,7 @@ err_drm_init_wait:
 	destroy_workqueue(rmi4_data->rmi4_probe_wq);
 	kfree(rmi4_data);
 }
+#endif
 
 static int synaptics_rmi4_remove(struct platform_device *pdev)
 {
@@ -4919,9 +4927,11 @@ static int synaptics_rmi4_remove(struct platform_device *pdev)
 
 	synaptics_rmi4_irq_enable(rmi4_data, false, false);
 
+#if defined(CONFIG_DRM)
 	if (active_panel)
 		drm_panel_notifier_unregister(active_panel,
 				&rmi4_data->fb_notifier);
+#endif
 
 #ifdef USE_EARLYSUSPEND
 	unregister_early_suspend(&rmi4_data->early_suspend);
@@ -4965,6 +4975,7 @@ static int synaptics_rmi4_remove(struct platform_device *pdev)
 	return 0;
 }
 
+#if defined(CONFIG_DRM)
 static int synaptics_rmi4_dsi_panel_notifier_cb(struct notifier_block *self,
 		unsigned long event, void *data)
 {
@@ -5006,6 +5017,7 @@ static int synaptics_rmi4_dsi_panel_notifier_cb(struct notifier_block *self,
 
 	return 0;
 }
+#endif
 
 #ifdef USE_EARLYSUSPEND
 static int synaptics_rmi4_early_suspend(struct early_suspend *h)

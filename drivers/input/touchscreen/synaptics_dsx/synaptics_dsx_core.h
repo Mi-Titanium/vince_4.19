@@ -49,7 +49,9 @@
 #include <linux/earlysuspend.h>
 #endif
 
+#if defined(CONFIG_DRM)
 #include <drm/drm_panel.h>
+#endif
 
 #if defined(CONFIG_SECURE_TOUCH_SYNAPTICS_DSX)
 #include <linux/completion.h>
@@ -142,7 +144,9 @@ enum exp_fn {
 	RMI_LAST,
 };
 
+#if defined(CONFIG_DRM)
 extern struct drm_panel *active_panel;
+#endif
 
 /*
  * struct synaptics_rmi4_fn_desc - function descriptor fields in PDT entry
