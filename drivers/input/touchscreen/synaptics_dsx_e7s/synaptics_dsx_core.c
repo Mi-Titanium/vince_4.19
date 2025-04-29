@@ -157,7 +157,6 @@ extern int get_tddi_lockdown_data (unsigned char *lockdown_data, unsigned short 
 static int synaptics_rmi4_check_status (struct synaptics_rmi4_data *rmi4_data,
 		bool *was_in_bl_mode);
 static int synaptics_rmi4_free_fingers (struct synaptics_rmi4_data *rmi4_data);
-static void synaptics_rmi4_set_configured(struct synaptics_rmi4_data *rmi4_data);
 static int synaptics_rmi4_reset_device (struct synaptics_rmi4_data *rmi4_data,
 		bool rebuild);
 
@@ -1728,7 +1727,6 @@ static int synaptics_rmi4_sensor_report (struct synaptics_rmi4_data *rmi4_data,
 		bool report)
 {
 	int retval;
-	unsigned char data[MAX_INTR_REGISTERS + 1];
 	unsigned char *data = NULL;
 	unsigned char *intr;
 	bool was_in_bl_mode;
@@ -1742,7 +1740,7 @@ static int synaptics_rmi4_sensor_report (struct synaptics_rmi4_data *rmi4_data,
 	 * Get interrupt status information from F01 Data1 register to
 	 * determine the source (s) that are flagging the interrupt.
 	 */
-	 data = kcalloc((MAX_INTR_REGISTERS + 1), sizeof(char), GFP_KERNEL);
+	data = kcalloc((MAX_INTR_REGISTERS + 1), sizeof(char), GFP_KERNEL);
  	if (!data) {
  		retval = -ENOMEM;
  		goto exit;
