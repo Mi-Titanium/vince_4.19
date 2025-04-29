@@ -1356,6 +1356,8 @@ source "drivers/input/touchscreen/focaltech_touch/Kconfig"
 
 source "drivers/input/touchscreen/nt36xxx/Kconfig"
 
+source "drivers/input/touchscreen/synaptics_dsx_e7s/Kconfig"
+
 config TOUCHSCREEN_NT36672
 	bool "Novatek NT36672"
 	default y
@@ -1374,19 +1376,6 @@ config VITURALSAR
 	  report 5 touches at a time.
 
 	  If unsure, say N.
-
-config TOUCHSCREEN_TD4310_E7
-	tristate "synaptics touchscreens"
-	depends on I2C
-	help
-	  Say Y here if you have a ist3038c touchscreen.
-	  Ft5x06 controllers are multi touch controllers which can
-	  report 5 touches at a time.
-
-	  If unsure, say N.
-
-	  To compile this driver as a module, choose M here: the
-	  module will be called ist3038c_ts.
 
 config TOUCHSCREEN_TD4310_LANSI_E7
 	tristate "synaptics touchscreens"
