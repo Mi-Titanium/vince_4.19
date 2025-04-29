@@ -1471,7 +1471,7 @@ static int fwu_read_flash_status (void)
 	retval = synaptics_rmi4_reg_read (rmi4_data,
 			fwu->f34_fd.data_base_addr + fwu->off.flash_status,
 			status,
- 			sizeof(*status));
+			sizeof(*status));
 	if (retval < 0) {
 		dev_err (rmi4_data->pdev->dev.parent,
 				"%s: Failed to read flash status\n",
@@ -5390,9 +5390,11 @@ static ssize_t fwu_sysfs_read_config_store (struct device *dev,
 
 	if (kstrtouint(buf, 10, &input) != 1) {
 		return -EINVAL;
+	}
 
-	if (input != 1)
+	if (input != 1) {
 		return -EINVAL;
+	}
 
 	if (!mutex_trylock (&fwu_sysfs_mutex))
 		return -EBUSY;
