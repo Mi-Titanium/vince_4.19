@@ -22,7 +22,11 @@ fw-external-y := $(subst $(quote),,$(CONFIG_EXTRA_FIRMWARE))
 # But be aware that the config file might not be included at all.
 
 # HMI_L6653_A01
-fw-shipped-$(CONFIG_TOUCHSCREEN_SYNAPTICS_DSX_E7S_FW_UPDATE) += synaptics/startup_fw_update.img
+fw-shipped-$(CONFIG_TOUCHSCREEN_SYNAPTICS_DSX_E7S_FW_UPDATE) += synaptics/tianma_td4310_miui_e7s.img
+fw-shipped-$(CONFIG_TOUCHSCREEN_SYNAPTICS_DSX_E7S_FW_UPDATE) += synaptics/shenchao_td4310_miui_e7s.img
+fw-shipped-$(CONFIG_TOUCHSCREEN_NVT_E7S) += novatek/nt36672_miui_e7s.bin
+fw-shipped-$(CONFIG_TOUCHSCREEN_NVT_E7S) += novatek/hx_nt36672_miui_e7s.bin
+
 fw-shipped-all := $(fw-shipped-y) $(fw-shipped-m) $(fw-shipped-)
 
 quiet_cmd_ihex  = IHEX    $@

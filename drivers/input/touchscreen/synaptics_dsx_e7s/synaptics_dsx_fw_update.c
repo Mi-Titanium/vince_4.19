@@ -44,8 +44,11 @@
 #include "synaptics_dsx_core.h"
 #include <linux/proc_fs.h>
 
-#define FW_IHEX_NAME "synaptics/startup_fw_update.bin"
-#define FW_IMAGE_NAME "synaptics/startup_fw_update.img"
+#define FW_IHEX_NAME "synaptics/tianma_td4310_miui_e7s.bin"
+#define FW_IMAGE_NAME "synaptics/tianma_td4310_miui_e7s.img"
+
+#define FW_IHEX_NAME_SHENCHAO "synaptics/shenchao_td4310_miui_e7s.bin"
+#define FW_IMAGE_NAME_SHENCHAO "synaptics/shenchao_td4310_miui_e7s.img"
 
 #define DO_STARTUP_FW_UPDATE
 
@@ -4520,6 +4523,12 @@ static int fwu_start_reflash(void)
 	pr_notice("%s: Start of reflash process\n", __func__);
 
 	if (fwu->image == NULL) {
+		if ((tp_lockdown_info[0] == '4')&&(tp_lockdown_info[1]=='1')) {
+			retval = secure_memcpy(fwu->image_name, MAX_IMAGE_NAME_LEN,
+					FW_IMAGE_NAME_SHENCHAO, sizeof(FW_IMAGE_NAME_SHENCHAO),
+					sizeof(FW_IMAGE_NAME_SHENCHAO));
+
+		} else {
 			retval = secure_memcpy(fwu->image_name, MAX_IMAGE_NAME_LEN,
 					FW_IMAGE_NAME, sizeof(FW_IMAGE_NAME),
 					sizeof(FW_IMAGE_NAME));
