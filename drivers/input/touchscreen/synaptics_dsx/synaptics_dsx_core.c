@@ -4673,6 +4673,7 @@ static void synaptics_rmi4_defer_probe(struct work_struct *work)
 	hw_if = rmi4_data->hw_if;
 	bdata = hw_if->board_data;
 
+#if defined(CONFIG_DRM)
 	init_completion(&rmi4_data->drm_init_done);
 	retval = wait_for_completion_interruptible(&rmi4_data->drm_init_done);
 	if (retval < 0) {
@@ -4681,6 +4682,7 @@ static void synaptics_rmi4_defer_probe(struct work_struct *work)
 				__func__);
 		goto err_drm_init_wait;
 	}
+#endif
 
 	retval = synaptics_rmi4_get_reg(rmi4_data, true);
 	if (retval < 0) {
@@ -4881,16 +4883,16 @@ err_set_gpio:
 err_enable_reg:
 	synaptics_rmi4_get_reg(rmi4_data, false);
 
-#if defined(CONFIG_DRM)
 err_get_reg:
+#if defined(CONFIG_DRM)
 err_drm_init_wait:
 	if (active_panel)
 		drm_panel_notifier_unregister(active_panel,
 				&rmi4_data->fb_notifier);
 	cancel_work_sync(&rmi4_data->rmi4_probe_work);
 	destroy_workqueue(rmi4_data->rmi4_probe_wq);
-	kfree(rmi4_data);
 #endif
+	kfree(rmi4_data);
 }
 
 static int synaptics_rmi4_remove(struct platform_device *pdev)
