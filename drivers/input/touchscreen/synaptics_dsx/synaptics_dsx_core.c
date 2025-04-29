@@ -4626,8 +4626,8 @@ static int synaptics_rmi4_probe(struct platform_device *pdev)
 					__func__);
 			goto err_drm_reg;
 		}
-	}
 #endif
+	}
 
 	/* Initialize secure touch */
 	synaptics_rmi4_secure_touch_init(rmi4_data);
