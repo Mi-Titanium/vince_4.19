@@ -25,6 +25,8 @@
 #include "mdss_dba_utils.h"
 #include <linux/delay.h>
 
+bool synaptics_gesture_func_on_lansi = true;
+
 #define CMDLINE_DSI_CTL_NUM_STRING_LEN 2
 
 /* Master structure to hold all the information about the DSI/panel */
