@@ -41,7 +41,9 @@
 #include <linux/platform_device.h>
 #include <linux/regulator/consumer.h>
 #include <linux/input/synaptics_dsx.h>
+#ifdef CONFIG_QCOM_PANEL_EVENT_NOTIFIER
 #include <linux/soc/qcom/panel_event_notifier.h>
+#endif
 #include "synaptics_dsx_core.h"
 #ifdef KERNEL_ABOVE_2_6_38
 #include <linux/input/mt.h>
