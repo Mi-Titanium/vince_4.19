@@ -24,10 +24,6 @@
 #include "mdss_dsi_phy.h"
 #include "mdss_dba_utils.h"
 
-bool synaptics_gesture_func_on_lansi = true;
-bool synaptics_gesture_func_on = true;
-bool NVT_gesture_func_on = true;
-
 #define CMDLINE_DSI_CTL_NUM_STRING_LEN 2
 
 /* Master structure to hold all the information about the DSI/panel */
