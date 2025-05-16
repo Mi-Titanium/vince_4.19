@@ -338,7 +338,6 @@ static const struct attribute_group rmi_f01_attr_group = {
 	.attrs = rmi_f01_attrs,
 };
 
-#ifdef CONFIG_OF
 static int rmi_f01_of_probe(struct device *dev,
 				struct rmi_device_platform_data *pdata)
 {
@@ -374,13 +373,6 @@ static int rmi_f01_of_probe(struct device *dev,
 
 	return 0;
 }
-#else
-static inline int rmi_f01_of_probe(struct device *dev,
-					struct rmi_device_platform_data *pdata)
-{
-	return -ENODEV;
-}
-#endif
 
 static int rmi_f01_probe(struct rmi_function *fn)
 {

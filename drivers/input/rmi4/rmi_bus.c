@@ -154,7 +154,6 @@ static int rmi_function_match(struct device *dev, struct device_driver *drv)
 	return fn->fd.function_number == handler->func;
 }
 
-#ifdef CONFIG_OF
 static void rmi_function_of_probe(struct rmi_function *fn)
 {
 	char of_name[9];
@@ -164,10 +163,6 @@ static void rmi_function_of_probe(struct rmi_function *fn)
 		fn->fd.function_number);
 	fn->dev.of_node = of_get_child_by_name(node, of_name);
 }
-#else
-static inline void rmi_function_of_probe(struct rmi_function *fn)
-{}
-#endif
 
 static struct irq_chip rmi_irq_chip = {
 	.name = "rmi4",

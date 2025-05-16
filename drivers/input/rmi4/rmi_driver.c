@@ -990,7 +990,6 @@ static int rmi_driver_remove(struct device *dev)
 	return 0;
 }
 
-#ifdef CONFIG_OF
 static int rmi_driver_of_probe(struct device *dev,
 				struct rmi_device_platform_data *pdata)
 {
@@ -1003,13 +1002,6 @@ static int rmi_driver_of_probe(struct device *dev,
 
 	return 0;
 }
-#else
-static inline int rmi_driver_of_probe(struct device *dev,
-					struct rmi_device_platform_data *pdata)
-{
-	return -ENODEV;
-}
-#endif
 
 int rmi_probe_interrupts(struct rmi_driver_data *data)
 {
